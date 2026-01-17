@@ -27,6 +27,8 @@ const int COUNT_VOLTS_LIMIT = 5;
 RCSwitch mySwitch = RCSwitch();
 Adafruit_BME280 bme;
 
+const int ledPin = 13;
+
 // Calibration
 const float TEMP_CALIBRATION = 0.0;
 
@@ -34,6 +36,13 @@ const float TEMP_CALIBRATION = 0.0;
 volatile uint8_t f_wdt = 1;
 int count = 999;
 int countVolts = 999;
+
+void ledOn() {
+  digitalWrite(13, HIGH);
+}
+void ledOff() {
+  digitalWrite(13, LOW);
+}
 
 void setup() {
   // --- 328PB GPIO HANDLING ---
@@ -45,6 +54,16 @@ void setup() {
     }
   }
   
+  pinMode(ledPin, OUTPUT);
+
+  for(int i = 0; i<5; i++) {
+    ledOn();
+    delay(50);  
+    ledOff();
+    delay(50); 
+  }
+  
+
   // 328PB Specific: Port E (PE0-PE3)
   // If not handled, these floating pins waste power.
   // Depending on your pinout variant, these might be mapped to digital pins,
@@ -74,6 +93,12 @@ void setup() {
 
   if (!bme.begin(BME_ADDRESS)) {
     trc("BME280 missing");
+      for(int i = 0; i<20; i++) {
+        ledOn();
+        delay(50);  
+        ledOff();
+        delay(50); 
+      }
   }
   
   // Forced mode is correct for sleep/wake cycles
